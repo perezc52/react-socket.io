@@ -24,9 +24,19 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     console.log(`User Connected: ${socket.id}`)
+
     socket.on('send_message', (data) => {
-        socket.emit('receive_message', data)
+        const messageObject = {
+            username: data.username,
+            message: data.message
+        }
+        io.emit('receive_message', messageObject)
     })
+
+    socket.on('disconnect', () => {
+        console.log(`User disconnected: ${socket.id}`)
+    })
+
 })
 
 server.listen(3001, () => {

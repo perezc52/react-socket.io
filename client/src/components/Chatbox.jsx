@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import { useState, useEffect } from 'react'
 
-const Chatbox = () => {
+const Chatbox = (props) => {
 
   const [message, setMessage] = useState('')
   const [chat, setChat] = useState([])
@@ -12,7 +12,7 @@ const Chatbox = () => {
     setSocket(newSocket)
 
     newSocket.on('receive_message', (data) => {
-      setChat(prevChat => [...prevChat, data.message])
+      setChat(prevChat => [...prevChat, data])
     })
 
     return () => {
@@ -21,23 +21,26 @@ const Chatbox = () => {
   }, [])
 
   function sendMessage() {
-    socket.emit('send_message', { message })
+    socket.emit('send_message', { username: props.username, message: message })
   }
 
-  const chatElements = chat.map((message, i) => {
+  const chatElements = chat.map((data, i) => {
     return (
-        <li key={i}>{message}</li>
+        <li key={i}>{`${data.username}: ${data.message}`}</li>
     )
   })
 
   return (
     <div className="chatbox">
-      <input type="text" placeholder='Message...' onChange={(e) => {setMessage(e.target.value)}} />
-      <button onClick={sendMessage}>Send Message</button>
-      <h1>Chat:</h1>
-      <ul>
-        {chatElements}
-      </ul>
+      <div className="chat">
+        <ul>
+          {chatElements}
+        </ul>
+      </div>
+      <div className="message">
+        <input type="text" placeholder='Message...' onChange={(e) => {setMessage(e.target.value)}} />
+        <button onClick={sendMessage}>Send Message</button>
+      </div>
     </div>
   )
 }

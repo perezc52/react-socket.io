@@ -1,8 +1,13 @@
-import React from 'react'
+import { useState } from 'react'
 
-const Header = () => {
+const Header = (props) => {
+
   return (
-    <div className='header'>Header</div>
+    <div className='header'>
+      <h1>Brainstorm</h1>
+      <h4>Username: {props.username}</h4>
+      <h4>Room #: {props.room}</h4>
+    </div>
   )
 }
 
